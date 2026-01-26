@@ -1,27 +1,11 @@
-import datetime
+from datetime import datetime
 
 
-def date():
-    """
-    Just return date as string
-    :return: date if success, False if fail
-    """
-    try:
-        date = datetime.datetime.now().strftime("%b %d %Y")
-    except Exception as e:
-        print(e)
-        date = False
-    return date
+def get_date() -> str:
+    """Return current date as string (e.g. 'Jan 26 2026')."""
+    return datetime.now().strftime("%b %d %Y")
 
 
-def time():
-    """
-    Just return time as string
-    :return: time if success, False if fail
-    """
-    try:
-        time = datetime.datetime.now().strftime("%H:%M:%S")
-    except Exception as e:
-        print(e)
-        time = False
-    return time
+def get_time() -> str:
+    """Return current time as string (e.g. '14:32:10')."""
+    return datetime.now().strftime("%H:%M:%S")

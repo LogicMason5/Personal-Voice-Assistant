@@ -1,146 +1,147 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>1440</width>
-    <height>900</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string>MainWindow</string>
-  </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>1440</width>
-      <height>900</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Jarvis/utils/images/live_wallpaper.gif</pixmap>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>1180</x>
-      <y>790</y>
-      <width>101</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(0, 170, 255);
-font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Run</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>1310</x>
-      <y>790</y>
-      <width>101</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color:rgb(255, 0, 0);
-font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
-    </property>
-    <property name="text">
-     <string>Exit</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>401</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>Jarvis/utils/images/initiating.gif</pixmap>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textBrowser">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>30</y>
-      <width>291</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;
-background-color:transparent;
-border-radius:none;
-</string>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textBrowser_2">
-    <property name="geometry">
-     <rect>
-      <x>930</x>
-      <y>30</y>
-      <width>291</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;
-background-color:transparent;
-border-radius:none;</string>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textBrowser_3">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>500</y>
-      <width>431</width>
-      <height>281</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 11pt &quot;MS Shell Dlg 2&quot;;
-background-color:transparent;</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1440</width>
-     <height>26</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
- </widget>
- <resources/>
- <connections/>
-</ui>
+import sys
+from PySide6.QtWidgets import (
+    QApplication, QMainWindow, QLabel, QPushButton, QTextBrowser, QWidget
+)
+from PySide6.QtGui import QMovie
+from PySide6.QtCore import Qt, QTimer
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Jarvis AI System")
+        self.setFixedSize(1440, 900)
+
+        # ---------------- Central Widget ----------------
+        self.centralwidget = QWidget(self)
+        self.setCentralWidget(self.centralwidget)
+
+        # ---------------- Background ----------------
+        self.bg_label = QLabel(self.centralwidget)
+        self.bg_label.setGeometry(0, 0, 1440, 900)
+
+        self.bg_movie = QMovie("Jarvis/utils/images/live_wallpaper.gif")
+        self.bg_label.setMovie(self.bg_movie)
+        self.bg_movie.start()
+        self.bg_label.setScaledContents(True)
+
+        # ---------------- Initiating GIF ----------------
+        self.init_label = QLabel(self.centralwidget)
+        self.init_label.setGeometry(10, 10, 401, 91)
+
+        self.init_movie = QMovie("Jarvis/utils/images/initiating.gif")
+        self.init_label.setMovie(self.init_movie)
+        self.init_movie.start()
+
+        # ---------------- Run Button ----------------
+        self.run_btn = QPushButton("Run", self.centralwidget)
+        self.run_btn.setGeometry(1180, 790, 101, 51)
+        self.run_btn.setStyleSheet("""
+            QPushButton {
+                background-color: rgb(0, 170, 255);
+                font: 75 18pt "MS Shell Dlg 2";
+                border-radius: 8px;
+            }
+            QPushButton:hover {
+                background-color: rgb(0, 140, 220);
+            }
+        """)
+
+        # ---------------- Exit Button ----------------
+        self.exit_btn = QPushButton("Exit", self.centralwidget)
+        self.exit_btn.setGeometry(1310, 790, 101, 51)
+        self.exit_btn.setStyleSheet("""
+            QPushButton {
+                background-color: rgb(255, 0, 0);
+                font: 75 18pt "MS Shell Dlg 2";
+                border-radius: 8px;
+            }
+            QPushButton:hover {
+                background-color: rgb(220, 0, 0);
+            }
+        """)
+
+        # ---------------- Text Displays ----------------
+        self.time_browser = QTextBrowser(self.centralwidget)
+        self.time_browser.setGeometry(640, 30, 291, 61)
+        self.time_browser.setStyleSheet("""
+            font: 75 16pt "MS Shell Dlg 2";
+            background-color: transparent;
+            border: none;
+            color: white;
+        """)
+
+        self.status_browser = QTextBrowser(self.centralwidget)
+        self.status_browser.setGeometry(930, 30, 291, 61)
+        self.status_browser.setStyleSheet("""
+            font: 75 16pt "MS Shell Dlg 2";
+            background-color: transparent;
+            border: none;
+            color: white;
+        """)
+
+        self.log_browser = QTextBrowser(self.centralwidget)
+        self.log_browser.setGeometry(1000, 500, 431, 281)
+        self.log_browser.setStyleSheet("""
+            font: 11pt "MS Shell Dlg 2";
+            background-color: rgba(0, 0, 0, 120);
+            color: #00ffff;
+            border-radius: 10px;
+            padding: 8px;
+        """)
+
+        # ---------------- Signals ----------------
+        self.run_btn.clicked.connect(self.start_system)
+        self.exit_btn.clicked.connect(self.close)
+
+        # ---------------- Timers ----------------
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_time)
+        self.timer.start(1000)
+
+        self.update_time()
+        self.set_status("System Ready")
+        self.log("UI Initialized Successfully")
+
+    # -------------------------------------------------
+    # Logic
+    # -------------------------------------------------
+
+    def update_time(self):
+        from datetime import datetime
+        now = datetime.now().strftime("%H:%M:%S")
+        self.time_browser.setText(f"🕒 {now}")
+
+    def set_status(self, text: str):
+        self.status_browser.setText(f"⚡ {text}")
+
+    def log(self, text: str):
+        self.log_browser.append(f"> {text}")
+
+    def start_system(self):
+        self.set_status("Jarvis Running")
+        self.log("Jarvis AI Core Started")
+        self.log("Voice engine: initialized")
+        self.log("AI modules: loaded")
+        self.log("Security layer: active")
+
+        # Placeholder for AI core start
+        # start_jarvis_core()
+
+    # Optional graceful shutdown
+    def closeEvent(self, event):
+        self.log("System shutting down...")
+        event.accept()
+
+
+# ---------------- App Runner ----------------
+
+def main():
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
+
+
+if __name__ == "__main__":
+    main()

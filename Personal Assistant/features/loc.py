@@ -1,37 +1,62 @@
-import webbrowser, requests
+import webbrowser
+import requests
 from geopy.geocoders import Nominatim
 from geopy.distance import great_circle
 import geocoder
 
-def loc(place):
-    webbrowser.open("http://www.google.com/maps/place/" + place + "")
-    geolocator = Nominatim(user_agent="myGeocoder")
+geolocator = Nominatim(user_agent="geo_utils")
+
+
+def get_current_location():
+    """Get current location via IP"""
+    g = geocoder.ip("me")
+    if not g.ok or not g.latlng:
+        raise RuntimeError("Unable to determine current location")
+
+    return {
+        "latlng": tuple(g.latlng),
+        "city": g.city or "",
+        "state": g.state or "",
+        "country": g.country or ""
+    }
+
+
+def geocode_place(place: str):
+    """Geocode a place name into coordinates and address info"""
     location = geolocator.geocode(place, addressdetails=True)
-    target_latlng = location.latitude, location.longitude
-    location = location.raw['address']
-    target_loc = {'city': location.get('city', ''),
-                   'state': location.get('state', ''),
-                   'country': location.get('country', '')}
+    if not location:
+        raise ValueError(f"Could not geocode location: {place}")
 
-    current_loc = geocoder.ip('me')
-    current_latlng = current_loc.latlng
+    address = location.raw.get("address", {})
 
-    distance = str(great_circle(current_latlng, target_latlng))
-    distance = str(distance.split(' ',1)[0])
-    distance = round(float(distance), 2)
-
-    return current_loc, target_loc, distance
-
-def my_location():
-    ip_add = requests.get('https://api.ipify.org').text
-    url = 'https://get.geojs.io/v1/ip/geo/' + ip_add + '.json'
-    geo_requests = requests.get(url)
-    geo_data = geo_requests.json()
-    city = geo_data['city']
-    state = geo_data['region']
-    country = geo_data['country']
-
-    return city, state,country
+    return {
+        "latlng": (location.latitude, location.longitude),
+        "city": address.get("city", ""),
+        "state": address.get("state", ""),
+        "country": address.get("country", "")
+    }
 
 
+def distance_between(latlng1, latlng2) -> float:
+    """Return distance in kilometers (rounded)"""
+    return round(great_circle(latlng1, latlng2).kilometers, 2)
 
+
+def locate(place: str, open_map: bool = True):
+    """
+    Locate a place, calculate distance from current IP location,
+    and optionally open Google Maps.
+    """
+    if open_map:
+        webbrowser.open(f"https://www.google.com/maps/place/{place}")
+
+    current = get_current_location()
+    target = geocode_place(place)
+
+    distance_km = distance_between(current["latlng"], target["latlng"])
+
+    return {
+        "current_location": current,
+        "target_location": target,
+        "distance_km": distance_km
+    }
